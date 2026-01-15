@@ -4,6 +4,5 @@ public enum EventType {
     MEETING,
     CONFERENCE,
     WORKSHOP,
-    WEBINAR,
     OTHER
 }
