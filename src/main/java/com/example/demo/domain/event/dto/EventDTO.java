@@ -41,7 +41,6 @@ public class EventDTO {
     @NotNull
     private EventType eventType;
 
-    // Key: userId, Value: role
     private Map<UUID, EventRole> participants = new HashMap<>();
 
     public EventDTO(UUID id, String eventName, String eventLocation,
