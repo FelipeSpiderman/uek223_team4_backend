@@ -6,7 +6,7 @@ CREATE TABLE event (
                        end_date_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
                        event_description VARCHAR(255),
                        event_type VARCHAR(255) NOT NULL,
-                       event_user_id UUID NOT NULL,
+                       user_id UUID NOT NULL,
                        CONSTRAINT pk_event PRIMARY KEY (id)
 );
 

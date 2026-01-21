@@ -19,7 +19,7 @@ INSERT INTO event (
     user_id
 )
 VALUES (
-           'd29e709c-0ff1-4f4c-a7ef-09f656c390f1',
+           '129e709c-0ff1-4f4c-a7ef-09f656c390f1',
            'TEST',
            'hello this is a description',
            'MEETING',
@@ -29,6 +29,10 @@ VALUES (
            'ba804cb9-fa14-42a5-afaf-be488742fc54'
        )
     ON CONFLICT DO NOTHING;
+
+INSERT INTO event_participants (event_id, user_id, role)
+VALUES ('129e709c-0ff1-4f4c-a7ef-09f656c390f1', 'ba804cb9-fa14-42a5-afaf-be488742fc54', 'OWNER')
+ON CONFLICT DO NOTHING;
 
 --ROLES
 INSERT INTO role(id, name)
