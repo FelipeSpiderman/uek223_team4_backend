@@ -1,96 +1,41 @@
-CREATE TABLE event
-(
-    id                UUID                        NOT NULL,
-    event_name        VARCHAR(50)                 NOT NULL,
-    event_location    VARCHAR(50),
-    end_date_time     TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    start_date_time   TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    event_description VARCHAR(255),
-    event_type        VARCHAR(255)                NOT NULL,
-    user_id           UUID                        NOT NULL,
-    CONSTRAINT pk_event PRIMARY KEY (id)
-);
-CREATE TABLE event
-(
-    id                UUID                        NOT NULL,
-    event_name        VARCHAR(50)                 NOT NULL,
-    event_location    VARCHAR(50),
-    end_date_time     TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    start_date_time   TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    event_description VARCHAR(255),
-    event_type        VARCHAR(255)                NOT NULL,
-    event_user_id     UUID                        NOT NULL,
-    CONSTRAINT pk_event PRIMARY KEY (id)
+CREATE TABLE users (
+    id UUID NOT NULL,
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    email VARCHAR(255) NOT NULL,
+    password VARCHAR(255),
+    CONSTRAINT pk_users PRIMARY KEY (id),
+    CONSTRAINT uc_users_email UNIQUE (email)
 );
 
-CREATE TABLE event_participants
-(
-    event_id UUID NOT NULL,
-    role     UNKNOWN__JAVA.UTIL.MAP<JAVA.UTIL.UUID,
-    EVENTROLE>
+DROP TABLE IF EXISTS event CASCADE;
+
+CREATE TABLE event (
+                       id UUID NOT NULL,
+                       event_name VARCHAR(50) NOT NULL,
+                       event_location VARCHAR(50),
+                       start_date_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+                       end_date_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
+                       event_description VARCHAR(255),
+                       event_type VARCHAR(255) NOT NULL,
+                       event_user_id UUID NOT NULL,
+                       CONSTRAINT pk_event PRIMARY KEY (id),
+                       CONSTRAINT fk_event_user FOREIGN KEY (event_user_id) REFERENCES users(id)
 );
 
-ALTER TABLE event_participants
-    ADD CONSTRAINT fk_event_participants_on_event FOREIGN KEY (event_id) REFERENCES event (id);
-CREATE TABLE event
-(
-    id                UUID                        NOT NULL,
-    event_name        VARCHAR(50)                 NOT NULL,
-    event_location    VARCHAR(50),
-    end_date_time     TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    start_date_time   TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    event_description VARCHAR(255),
-    event_type        VARCHAR(255)                NOT NULL,
-    event_user_id     UUID                        NOT NULL,
-    CONSTRAINT pk_event PRIMARY KEY (id)
+CREATE TABLE users_role (
+                            role_id UUID NOT NULL,
+                            users_id UUID NOT NULL,
+                            CONSTRAINT pk_users_role PRIMARY KEY (role_id, users_id),
+                            CONSTRAINT fk_userol_on_role FOREIGN KEY (role_id) REFERENCES role (id),
+                            CONSTRAINT fk_userol_on_user FOREIGN KEY (users_id) REFERENCES users (id)
 );
-
-CREATE TABLE event_participants
-(
-    event_id UUID NOT NULL,
-    role     VARCHAR(255),
-    user_id  UUID NOT NULL,
-    CONSTRAINT pk_event_participants PRIMARY KEY (event_id, user_id)
-);
-
-ALTER TABLE event_participants
-    ADD CONSTRAINT fk_event_participants_on_event FOREIGN KEY (event_id) REFERENCES event (id);
-CREATE TABLE event
-(
-    id                UUID                        NOT NULL,
-    event_name        VARCHAR(50)                 NOT NULL,
-    event_location    VARCHAR(50),
-    end_date_time     TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    start_date_time   TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    event_description VARCHAR(255),
-    event_type        VARCHAR(255)                NOT NULL,
-    event_user_id     UUID                        NOT NULL,
-    CONSTRAINT pk_event PRIMARY KEY (id)
-);
-
-CREATE TABLE event_participants
-(
-    event_id UUID NOT NULL,
-    role     VARCHAR(255),
-    user_id  UUID NOT NULL,
-    CONSTRAINT pk_event_participants PRIMARY KEY (event_id, user_id)
-);
-
-ALTER TABLE event_participants
-    ADD CONSTRAINT fk_event_participants_on_event FOREIGN KEY (event_id) REFERENCES event (id);
-
 -- EVENT Authorities
 INSERT INTO authority(id, name) VALUES
                                     (gen_random_uuid(), 'EVENT_CREATE'),
                                     (gen_random_uuid(), 'EVENT_READ'),
                                     (gen_random_uuid(), 'EVENT_MODIFY'),
                                     (gen_random_uuid(), 'EVENT_DELETE')
-ON CONFLICT DO NOTHING;
-
--- USER Authorities (falls fehlen)
-INSERT INTO authority(id, name) VALUES
-                                    (gen_random_uuid(), 'USER_MODIFY'),
-                                    (gen_random_uuid(), 'USER_DEACTIVATE')
 ON CONFLICT DO NOTHING;
 
 -- Zuweisen an ADMIN Role
