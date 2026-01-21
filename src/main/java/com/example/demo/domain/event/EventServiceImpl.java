@@ -58,6 +58,13 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
+    public List<EventDTO> getAllEvents() {
+        return eventRepository.findAll().stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
+    }
+
+    @Override
     @Transactional
     public EventDTO updateEvent(UUID eventId, EventDTO eventDTO, UUID userId) {
         if (!hasRole(eventId, userId, EventRole.OWNER, EventRole.COLLABORATOR)) {

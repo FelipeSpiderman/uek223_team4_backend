@@ -12,6 +12,7 @@ public interface EventService {
     EventDTO findEventById(UUID eventId);
 
     List<EventDTO> findMyEvents(UUID userId);
+    List<EventDTO> getAllEvents();
 
     EventDTO updateEvent(UUID eventId, EventDTO eventDTO, UUID userId);
 

@@ -52,6 +52,15 @@ public class EventController {
         return ResponseEntity.ok(events);
     }
 
+    @GetMapping("/getAllEvents")
+//    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<EventDTO>> getAllEvents(
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        List<EventDTO> events = eventService.getAllEvents();
+        return ResponseEntity.ok(events);
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('EVENT_MODIFY')")
     public ResponseEntity<EventDTO> updateEvent(
