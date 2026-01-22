@@ -1,6 +1,7 @@
 package com.example.demo.domain.event;
 
 import com.example.demo.domain.event.dto.EventDTO;
+import com.example.demo.domain.event.dto.PublicEventDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,22 @@ public class EventServiceImpl implements EventService {
         return toDTO(saved);
     }
 
+    @Override
+    public List<PublicEventDTO> getPublicEvents() {
+        return eventRepository.findAll().stream()
+                .map(this::toPublicDTO)
+                .collect(Collectors.toList());
+    }
+
+    private PublicEventDTO toPublicDTO(Event event) {
+        return new PublicEventDTO(
+                event.getId(),
+                event.getEventName(),
+                event.getEventLocation(),
+                event.getStartDateTime(),
+                event.getEndDateTime()
+        );
+    }
     @Override
     public EventDTO findEventById(UUID eventId) {
         Event event = eventRepository.findById(eventId)
