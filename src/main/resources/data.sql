@@ -247,3 +247,17 @@ VALUES
     ('ba804cb9-fa14-42a5-afaf-be488742fc54', 'ab505c92-7280-49fd-a7de-258e618df074'), -- ADMIN
     ('0d8fa44c-54fd-4cd0-ace9-2a7da57992de', 'ef421859-4347-4ed6-8cc3-2acc69e40fbc')  -- ATTENDEE
 ON CONFLICT DO NOTHING;
+-- EVENT_CREATE der USER Rolle zuweisen
+INSERT INTO role_authority (role_id, authority_id)
+VALUES (
+           'c6aee32d-8c35-4481-8b3e-a876a39b0c02', -- USER
+           'a1c942db-a275-43f8-bdd6-d048c21bf5ab'  -- EVENT_CREATE
+       )
+ON CONFLICT DO NOTHING;
+
+INSERT INTO users_role (users_id, role_id)
+SELECT
+    u.id,
+    'c6aee32d-8c35-4481-8b3e-a876a39b0c02' -- USER
+FROM users u
+ON CONFLICT DO NOTHING;
