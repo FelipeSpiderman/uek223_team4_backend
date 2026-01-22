@@ -1,6 +1,7 @@
 package com.example.demo.domain.event;
 
 import com.example.demo.domain.event.dto.EventDTO;
+import com.example.demo.domain.event.dto.PublicEventDTO;
 import com.example.demo.domain.user.UserDetailsImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,19 @@ public class EventController {
             @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
         List<EventDTO> events = eventService.findMyEvents(userDetails.user().getId());
+        return ResponseEntity.ok(events);
+    }
+    @GetMapping("/public")
+    public ResponseEntity<List<PublicEventDTO>> getPublicEvents() {
+        List<PublicEventDTO> events = eventService.getPublicEvents();
+        return ResponseEntity.ok(events);
+    }
+    @GetMapping("/getAllEvents")
+//    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<EventDTO>> getAllEvents(
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        List<EventDTO> events = eventService.getAllEvents();
         return ResponseEntity.ok(events);
     }
 

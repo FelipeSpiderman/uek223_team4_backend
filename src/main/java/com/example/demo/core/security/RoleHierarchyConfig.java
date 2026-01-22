@@ -12,8 +12,10 @@ public class RoleHierarchyConfig {
     public RoleHierarchy roleHierarchy() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("""
-            ROLE_ADMIN > ROLE_OWNER
-            ROLE_COLLABORATOR > ROLE_ATTENDEE > ROLE_USER
+            ADMIN > OWNER
+            OWNER > COLLABORATOR
+            COLLABORATOR > ATTENDEE
+            ATTENDEE > USER
         """);
         return roleHierarchy;
     }
