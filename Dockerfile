@@ -1,18 +1,30 @@
-# Set up the build environment using the Gradle image with JDK 18
+# Stage 1: Build
 FROM gradle:jdk18 AS build
 # Copy the project files to the /home/gradle/src directory
 COPY --chown=gradle:gradle . /home/gradle/src
-# Set the working directory to /home/gradle/src
+# Set the working directory
 WORKDIR /home/gradle/src
-# Build the Spring Boot application using Gradle
+# Build the Spring Boot JAR
 RUN gradle --no-daemon bootJar
-# Create a new image with the OpenJDK 18 base image
-FROM openjdk:18
-# Create a directory named /app
-RUN mkdir /app
-# Copy the built JAR file from the build stage to /app in the new image
-COPY --from=build /home/gradle/src/build/libs/*.jar /app/spring-boot-application.jar
-# Expose port 8080 for the Spring Boot application
+
+# Stage 2: Runtime
+FROM eclipse-temurin:18-jre
+
+# Create app directory
+RUN mkdir -p /app
+
+# Set working directory
+WORKDIR /app
+
+# Copy only the final JAR from the build stage
+COPY --from=build /home/gradle/src/build/libs/*.jar /app/app.jar
+
+# Expose the port your app runs on
 EXPOSE 8080
-# Run the Spring Boot application as a Java application with specified memory options
-CMD ["java", "-jar", "-Xmx4g", "/app/spring-boot-application.jar"]
+
+# Health check (optional but recommended)
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD java -cp app.jar org.springframework.boot.loader.JarLauncher || exit 1
+
+# Run the application
+CMD ["java", "-Xmx512m", "-Xms256m", "-jar", "app.jar"]
